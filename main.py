@@ -1,4 +1,7 @@
+#!/usr/bin/env python
 import string
+from typing import Counter
+import matplotlib.pyplot as plt
 #Cleaning Text Steps
 # 1) Create a text file and take text from it
 
@@ -34,9 +37,31 @@ stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than",
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
-final_word=[]
+final_words=[]
 for word in tokenized_words:
     if word not in stop_words:
-        final_word.append(word)
+        final_words.append(word)
 
-print(final_word)
+print(final_words)
+
+emotion_list = []
+with open('emotions.txt', 'r') as file:
+    for line in file:
+        clear_line = line.replace("\n", '').replace(",", '').replace("'", '').strip()
+        word, emotion = clear_line.split(':')
+
+        if word in final_words:
+            emotion_list.append(emotion)
+
+print(emotion_list)
+
+w = Counter(emotion_list)
+print(w)
+
+# Plotting the emotions on the graph
+
+fig, ax1 = plt.subplots()
+ax1.bar(w.keys(), w.values())
+fig.autofmt_xdate()
+plt.savefig('graph.png')
+plt.show()
